@@ -139,9 +139,23 @@ Mais c’est justement en affrontant ces obstacles que j’ai beaucoup progress�
 
 ---
 
+## 📸 Screenshots
 
-## Screenshots
+### Page d’accueil
+![Homepage Screenshot](public/screens/Screenshot-page-produit.png)
 
+### Page detail
+![Product Screenshot](public/screens/Screenshot-page-detail.png)
+
+
+### Page admin
+![Product Screenshot](public/screens/Screenshot-page-admin.png)
+
+### Page admin
+![Product Screenshot](public/screens/Screenshot-page-admin-2.png)
+
+### Page authentification
+![Product Screenshot](public/screens/Screenshot-page-authentification.png)
 
 ## 📄 Licence
 
