@@ -16,7 +16,7 @@ class Image
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $url = null;
 
     #[Vich\UploadableField(mapping: 'product_images', fileNameProperty: 'url')]
@@ -31,6 +31,9 @@ class Image
     #[ORM\ManyToOne(inversedBy: 'images')]
     private ?Product $product = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isMain = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -41,7 +44,7 @@ class Image
         return $this->url;
     }
 
-    public function setUrl(string $url): static
+    public function setUrl(?string $url): static
     {
         $this->url = $url;
 
@@ -93,5 +96,21 @@ class Image
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    public function isMain(): bool
+    {
+        return $this->isMain;
+    }
+
+    public function setIsMain(bool $isMain): static
+    {
+        $this->isMain = $isMain;
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->url ?? '';  // renvoie l’URL ou un string vide
     }
 }

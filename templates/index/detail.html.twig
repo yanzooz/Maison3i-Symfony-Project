@@ -1,0 +1,149 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} - Maison3i{% endblock %}
+
+{% block body %}
+<section class="bg-white py-16 text-gray-900">
+  <div class="container mx-auto px-4 lg:px-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+      <!-- Swiper galerie -->
+      <div>
+        <!-- Swiper container -->
+        <div class="swiper mainSwiper  overflow-hidden ">
+          <div class="swiper-wrapper">
+            {% for image in product.images %}
+              <div class="swiper-slide">
+                <img src="{{ asset('image/' ~ image.url) }}"
+                     class="w-full h-[600px] object-cover cursor-zoom-in hover:scale-105 transition duration-300"
+                     alt="{{ product.name }}"
+                     onclick="openZoom(this.src)">
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Arrows -->
+          <!-- Bouton PREV -->
+          <div class="absolute top-1/2 -translate-y-1/2 left-4 z-10">
+            <button id="customPrev"
+              class=" w-10 h-10  rounded flex items-center justify-center  transition">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  width="40"
+                  height="40"
+                  class="icon flat-color text-gray-400 hover:text-black transition duration-300 cursor-pointer">
+                <path d="M17.45,2.11a1,1,0,0,0-1.05.09l-12,9a1,1,0,0,0,0,1.6l12,9a1,1,0,0,0,1.05.09A1,1,0,0,0,18,21V3A1,1,0,0,0,17.45,2.11Z" />
+              </svg>            
+            </button>
+          </div>
+
+          <!-- Bouton NEXT -->
+          <div class="absolute top-1/2 -translate-y-1/2 right-4 z-10">
+            <button id="customNext"
+              class=" w-10 h-10  rounded flex items-center justify-center transition">
+          <svg xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="40"
+                height="40"
+                class="icon flat-color text-gray-400 hover:text-black transition duration-300 cursor-pointer">
+              <path d="M18.6,11.2l-12-9A1,1,0,0,0,5,3V21a1,1,0,0,0,.55.89,1,1,0,0,0,1-.09l12-9a1,1,0,0,0,0-1.6Z" />
+            </svg>          
+        </div>
+
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="swiper thumbSwiper mt-4">
+          <div class="swiper-wrapper ">
+            {% for image in product.images %}
+              <div class="swiper-slide !w-24 !h-24  overflow-hidden">
+                <img src="{{ asset('image/' ~ image.url) }}"
+                    class="w-full h-full object-cover cursor-pointer transition duration-300 hover:opacity-60 hover:scale-105">
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- Infos produit -->
+      <div class="flex flex-col gap-6 justify-center">
+        <h1 class="text-4xl bold">{{ product.name }}</h1>
+        <p class="text-sm uppercase text-gray-500">{{ product.category.name }}</p>
+        <p class="text-2xl  text-gray-600" >{{ product.price }} €</p>
+
+        <div class="text-gray-700 leading-relaxed whitespace-pre-line">
+          {{ product.description|raw }}
+        </div>
+
+        <div class="pt-6">
+          <button class="w-full bg-black text-white py-4  font-medium hover:bg-gray-800 transition">
+            Ajouter au panier
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal zoom -->
+<div id="zoomModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50">
+  <div onclick="closeZoom()" class="absolute inset-0 z-10"></div>
+
+  <img id="zoomedImage"
+       src=""
+       class="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-xl cursor-zoom-in z-20 transition-transform duration-300" />
+</div>
+
+
+<script>
+  function openZoom(src) {
+    document.getElementById('zoomedImage').src = src;
+    document.getElementById('zoomModal').classList.remove('hidden');
+    document.getElementById('zoomModal').classList.add('flex');
+  }
+
+  function closeZoom() {
+    document.getElementById('zoomModal').classList.add('hidden');
+    document.getElementById('zoomModal').classList.remove('flex');
+  }
+
+  const thumbSwiper = new Swiper(".thumbSwiper", {
+    spaceBetween: 10,
+    slidesPerView: 4,
+    freeMode: true,
+    watchSlidesProgress: true,
+  });
+
+  const mainSwiper = new Swiper(".mainSwiper", {
+    spaceBetween: 10,
+    navigation: {
+      nextEl: "#customNext",
+      prevEl: "#customPrev",
+    },
+    thumbs: {
+      swiper: thumbSwiper,
+    },
+  });
+
+
+function openZoom(src) {
+  const modal = document.getElementById('zoomModal');
+  const img = document.getElementById('zoomedImage');
+
+  img.src = src;
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function closeZoom() {
+  const modal = document.getElementById('zoomModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+</script>
+{% endblock %}

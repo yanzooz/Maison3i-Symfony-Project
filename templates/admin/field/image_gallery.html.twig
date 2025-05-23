@@ -1,0 +1,51 @@
+{# templates/admin/field/images_simple.html.twig #}
+{% set basePath = 'image' %} {# adapte si besoin #}
+
+<div class="d-flex flex-wrap gap-2">
+    {% for image in field.value %}
+        <img src="{{ asset(basePath ~ '/' ~ image.url) }}"
+             class="img-fluid zoomable-img"
+             style="max-width:150px;height:auto;cursor:zoom-in;">
+    {% endfor %}
+</div>
+
+<script>
+(() => {
+    document.querySelectorAll('.zoomable-img').forEach(img => {
+        img.addEventListener('click', () => {
+            const src = img.src;
+            const overlay = document.createElement('div');
+            overlay.className = 'custom-img-overlay';
+            overlay.innerHTML = `<img src="${src}" style="max-width:90vw;max-height:90vh;">`;
+
+            Object.assign(overlay.style, {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0,0,0,0.85)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 9999,
+                cursor: 'zoom-out',
+            });
+
+            // Fermer sur clic
+            overlay.addEventListener('click', () => overlay.remove());
+
+            // Fermer sur Échap
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    overlay.remove();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
+
+            document.body.appendChild(overlay);
+        });
+    });
+})();
+</script>

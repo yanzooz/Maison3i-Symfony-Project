@@ -1,20 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}Maison3i - Accueil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<!-- Hero section -->
+<section class="relative w-full h-[90vh] bg-black">
+    <img src="{{ asset('image/assets/TESTTEST-fotor-enhance-20250504223001.jpg') }}" alt="Collection Maison3i" class="w-full h-full object-cover opacity-80">
+    <div class="absolute inset-0 flex flex-col justify-center items-center text-white text-center px-4">
+        <h1 class="text-5xl font-extrabold text-white text-center mb-6">M3ISON STORE</h1>
+        <a href="{{ path('app_products') }}" class="bg-white text-black px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition">Voir la collection</a>
+    </div>
+  </section>
+  
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<!-- Collections section -->
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center mb-10">Nos catégories</h2>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Yanni/maison3i/src/Controller/IndexController.php</code></li>
-        <li>Your template at <code>C:/Users/Yanni/maison3i/templates/index/index.html.twig</code></li>
-    </ul>
-</div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for category in categories %}
+        <a href="{{ path('app_products') ~ '?category=' ~ category.id }}"
+           class="group relative overflow-hidden rounded-lg shadow-lg block">
+          <img src="{{ asset('image/assets/' ~ category.image) }}"
+               alt="{{ category.name }}"
+               class="w-full h-80 object-cover transform group-hover:scale-105 transition duration-500 ease-in-out">
+          <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+            <span class="text-white text-xl font-semibold uppercase tracking-wide">{{ category.name }}</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
 {% endblock %}

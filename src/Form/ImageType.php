@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -19,6 +20,10 @@ class ImageType extends AbstractType
             ])
             ->add('alt', null, [
                 'label' => 'Texte alternatif',
+                'required' => false
+            ])
+            ->add('isMain', CheckboxType::class, [
+                'label' => 'Image principale',
                 'required' => false,
             ]);
     }

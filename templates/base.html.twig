@@ -5,6 +5,12 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+        <!-- Swiper styles -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        <!-- AOS CSS -->
+        <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+
         {% block stylesheets %}
         {% endblock %}
 
@@ -13,7 +19,62 @@
         {% endblock %}
     </head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <!-- Swiper script -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <body>
-        {% block body %}{% endblock %}
+        <div id="preloader"
+        class="fixed inset-0 bg-white z-[9999] flex items-center justify-center transition-opacity duration-700">
+            <video autoplay muted playsinline loop
+                class="w-64 h-64 object-contain">
+                    <source src="{{ asset('image/assets/istockphoto-1211151402-640_adpp_is.mp4') }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la vidéo.
+            </video>
+        </div>
+        
+        {% include "navbar.html.twig" %}
+        {% block body %}
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div
+                        class="
+                flash-message
+                        fixed
+                        left-1/2
+                        top-20
+                        transform -translate-x-1/2
+                        {{ type == 'success' ? 'bg-green-100 text-green-800' : '' }}
+                        {{ type == 'error' ? 'bg-red-100 text-red-800' : '' }}
+                        {{ type == 'warning' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                        px-4 py-3 rounded-lg shadow-lg
+                        w-96
+                        text-center
+                        z-50
+                        fade
+                    ">
+                    <p>{{ message }}</p>
+                </div>
+        {% endfor %}
+    {% endfor %}
+        
+        {% endblock %}
+        {% include "footer.html.twig" %}
+    <script>
+
+        AOS.init({
+            once: true, // une seule fois
+            duration: 800, // durée de l'animation
+            easing: 'ease-in-out', // effet de transition
+        });
+    </script>
+    <script>
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('preloader');
+        loader.style.opacity = '0';
+        loader.style.pointerEvents = 'none';
+        setTimeout(() => loader.remove(), 700);
+    });
+    </script>
     </body>
 </html>

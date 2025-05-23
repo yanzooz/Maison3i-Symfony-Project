@@ -1,0 +1,9 @@
+<ul class="list-unstyled mb-0">
+    {% for product in field.value %}
+        <li>
+            <a href="{{ '/admin/product/' ~ product.id }}">
+                🛍️ {{ product.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

@@ -11,6 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Product
 {
     #[ORM\Id]
@@ -32,6 +33,9 @@ class Product
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category = null;
@@ -55,7 +59,7 @@ class Product
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'product',cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'product', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $images;
 
     public function __construct()
@@ -128,6 +132,18 @@ class Product
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -153,9 +169,14 @@ class Product
     public function getShortDescription(): string
     {
         return strip_tags($this->description ?? '');
+    }   
+
+    public function __toString(): string
+    {
+    return (string) $this->getName();
     }
 
-
+    
     /**
      * @return Collection<int, Image>
      */
@@ -190,4 +211,16 @@ class Product
     {
         return $this->images->toArray(); // convertit la collection en tableau
     }
+
+    public function getMainImageFromGallery(): ?Image
+    {
+        foreach ($this->images as $image) {
+            if ($image->isMain()) {
+                return $image;
+            }
+        }
+        return null;
+    }
+
+  
 }

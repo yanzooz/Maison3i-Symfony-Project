@@ -18,11 +18,16 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+  
+
     /**
      * @var Collection<int, Product>
      */
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category')]
     private Collection $products;
+
 
     public function __construct()
     {
@@ -39,10 +44,21 @@ class Category
         return $this->name;
     }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
     public function setName(string $name): static
     {
         $this->name = $name;
 
+        return $this;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
         return $this;
     }
 
@@ -58,7 +74,7 @@ class Category
 
     public function __toString(): string
     {
-        return $this->name ?? '';
+        return (string) $this->getName();
     }
 
 
@@ -69,6 +85,7 @@ class Category
     {
         return $this->products;
     }
+
 
     public function addProduct(Product $product): static
     {
@@ -91,4 +108,7 @@ class Category
 
         return $this;
     }
+    
+   
+
 }

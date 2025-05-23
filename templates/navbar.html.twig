@@ -1,0 +1,124 @@
+<!-- Alpine.js pour les interactions du menu mobile -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<nav class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+
+    <!-- Logo -->
+    <a href="{{ path('app_home') }}" class="flex items-center gap-2">
+      <img src="{{ asset('image/assets/logoMaison3iSite.png') }}" alt="Logo MAISON3I" class="size-16 object-contain">
+    </a>
+
+    <!-- Menu desktop -->
+    <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+
+      <a href="{{ path('app_home') }}" class="text-gray-700 hover:text-indigo-600 transition">Accueil</a>
+
+      <!-- Menu déroulant Produits -->
+      <div class="relative group pt-3 pb-3">
+        <div class="text-gray-700 cursor-pointer hover:text-indigo-600 transition inline-flex items-center gap-1">
+          Produits
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div
+          class="absolute left-0 w-48 mt-2 bg-white border rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 z-50">
+          <a href="{{ path('app_products') }}"
+             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tous les produits</a>
+          {% for category in nav_categories %}
+            <a href="{{ path('app_products') ~ '?category=' ~ category.id }}"
+               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              {{ category.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <a href="#" class="text-gray-700 hover:text-indigo-600 transition">Contact</a>
+      <a href="#" class="text-gray-700 hover:text-indigo-600 transition">À propos</a>
+
+      {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('admin') }}" class="text-green-600 font-semibold hover:text-green-700 transition">Admin</a>
+      {% endif %}
+    </div>
+
+    <!-- Espace utilisateur -->
+    <div class="hidden md:flex items-center gap-4 text-sm font-medium">
+      {% if app.user %}
+        <a href="{{ path('app_logout') }}" class="text-gray-600 hover:text-red-600 transition">Déconnexion</a>
+      {% else %}
+        <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-indigo-600 transition">Connexion</a>
+        <a href="{{ path('app_register') }}"
+           class="bg-gray-900 text-white px-3 py-1 rounded hover:bg-gray-700 hover:text-white transition">Inscription</a>
+      {% endif %}
+      <a href="#" class="text-2xl text-gray-700 hover:text-indigo-600">🛒</a>
+    </div>
+
+    <!-- Bouton mobile -->
+    <div class="md:hidden">
+      <button id="mobile-menu-button" aria-expanded="false" aria-controls="mobile-menu"
+              class="text-2xl text-gray-700 focus:outline-none transition-transform hover:rotate-90">☰</button>
+    </div>
+  </div>
+
+  <!-- Menu mobile animé -->
+  <div id="mobile-menu"
+       class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white px-4 text-sm font-medium">
+    <div class="flex flex-col gap-3 py-4 border-t">
+
+      <a href="{{ path('app_home') }}" class="text-gray-700 hover:text-indigo-600">Accueil</a>
+
+      <!-- Menu déroulant Produits mobile avec Alpine.js -->
+      <div x-data="{ open: false }" class="flex flex-col">
+        <button @click="open = !open"
+                class="text-left text-gray-700 hover:text-indigo-600 flex items-center justify-between w-full">
+          Produits
+          <svg :class="open ? 'rotate-180' : ''" class="w-4 h-4 transform transition-transform" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div x-show="open" x-transition class="flex flex-col pl-4 mt-2 space-y-2">
+          <a href="{{ path('app_products') }}" class="text-gray-500 hover:text-indigo-600 ">Tous les produits</a>
+          {% for category in nav_categories %}
+            <a href="{{ path('app_products') ~ '?category=' ~ category.id }}"
+               class="text-gray-500 hover:text-indigo-600 ">
+              {{ category.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <a href="#" class="text-gray-700 hover:text-indigo-600">Contact</a>
+      <a href="#" class="text-gray-700 hover:text-indigo-600">À propos</a>
+
+      {% if app.user %}
+        {% if is_granted('ROLE_ADMIN') %}
+          <a href="{{ path('admin') }}" class="text-green-600 font-semibold hover:text-green-700 transition">Admin</a>
+        {% endif %}
+        <a href="{{ path('app_logout') }}" class="text-gray-700 hover:text-red-600">Déconnexion</a>
+      {% else %}
+        <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-indigo-600">Connexion</a>
+        <a href="{{ path('app_register') }}"
+           class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-500">Inscription</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Script toggle du menu mobile -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+
+    button.addEventListener('click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'true' || false;
+      button.setAttribute('aria-expanded', !expanded);
+      menu.classList.toggle('max-h-0');
+      menu.classList.toggle('max-h-[400px]');
+    });
+  });
+</script>
